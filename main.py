@@ -12,7 +12,6 @@ def main():
     pygame.display.set_caption("Snake Game")
 
     in_menu = True
-    events = []  # Lista para almacenar eventos
 
     while True:
         events = pygame.event.get()  # Obtener eventos en cada iteración
@@ -30,6 +29,7 @@ def main():
         pygame.display.update()
 
 def draw(screen):
+
     screen.fill((255, 255, 255))
 
     for x in range(0, SCREEN_WIDTH, CELL_SIZE):
@@ -38,6 +38,12 @@ def draw(screen):
                 pygame.draw.rect(screen, (0, 0, 0), (x, y, CELL_SIZE, CELL_SIZE))
             else:
                 pygame.draw.rect(screen, (255, 255, 255), (x, y, CELL_SIZE, CELL_SIZE))
+
+    # Dibujar el marco del juego
+    pygame.draw.rect(screen, BLACK, (0, 0, SCREEN_WIDTH, CELL_SIZE))
+    pygame.draw.rect(screen, BLACK, (0, 0, CELL_SIZE, SCREEN_HEIGHT))
+    pygame.draw.rect(screen, BLACK, (0, SCREEN_HEIGHT - CELL_SIZE, SCREEN_WIDTH, CELL_SIZE))
+    pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
 
 def menu(screen, events):
     screen.fill((255, 255, 255))
