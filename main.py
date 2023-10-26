@@ -16,6 +16,7 @@ def main():
 
     in_menu = True
 
+
     snake = Snake()
 
     last_update_time = pygame.time.get_ticks()

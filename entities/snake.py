@@ -3,10 +3,13 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE
 
 class Snake:
     def __init__(self):
-        self.body = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        initial_x = (SCREEN_WIDTH // 2 // CELL_SIZE) * CELL_SIZE
+        initial_y = (SCREEN_HEIGHT // 2 // CELL_SIZE) * CELL_SIZE
+        self.body = [(initial_x, initial_y)]
         self.direction = (1,0)
 
     def move(self):
+
         new_head = (
             (self.body[0][0] + self.direction[0] * CELL_SIZE) % SCREEN_WIDTH,
             (self.body[0][1] + self.direction[1] * CELL_SIZE) % SCREEN_HEIGHT
