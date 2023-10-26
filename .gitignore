@@ -1,0 +1,24 @@
+# Ignorar archivos y directorios de caché generados por Python
+__pycache__/
+*.pyc
+
+# Ignorar el directorio de entorno virtual
+venv/
+
+# Ignorar archivos de registro y archivos generados por PyCharm
+.idea/
+*.log
+
+# Ignorar archivos de registro de errores y advertencias de PyCharm
+*.pycharm_helpers/
+
+# Ignorar archivos de configuración de usuario de PyCharm
+.idea/workspace.xml
+.idea/misc.xml
+.idea/modules.xml
+
+# Ignorar archivos de configuración de usuario de Visual Studio Code
+.vscode/
+
+# Ignorar configuraciones del proyecto de PyCharm
+.idea/
