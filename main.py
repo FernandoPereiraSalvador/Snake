@@ -1,7 +1,10 @@
+from pygame.time import Clock
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE
 
 # Definir colores
+from entities.snake import Snake
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
@@ -12,6 +15,11 @@ def main():
     pygame.display.set_caption("Snake Game")
 
     in_menu = True
+
+    snake = Snake()
+
+    last_update_time = pygame.time.get_ticks()
+    update_interval = 200  # Actualizar cada 100 milisegundos
 
     while True:
         events = pygame.event.get()  # Obtener eventos en cada iteración
@@ -24,8 +32,25 @@ def main():
                 start_game = menu(screen, events)  # Pasa la lista de eventos a la función del menú
                 if start_game:
                     in_menu = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    snake.change_direction((0,-1))
+                elif event.key == pygame.K_DOWN:
+                    snake.change_direction((0,1))
+                elif event.key == pygame.K_LEFT:
+                    snake.change_direction((-1,0))
+                elif event.key == pygame.K_RIGHT:
+                    snake.change_direction((1,0))
         if not in_menu:
             draw(screen)
+            for segment in snake:
+                pygame.draw.rect(screen,(0, 255, 0),(segment[0], segment[1], CELL_SIZE,CELL_SIZE))
+        current_time = pygame.time.get_ticks()
+        if current_time - last_update_time >= update_interval:
+            snake.move()
+            last_update_time = current_time
+
+
         pygame.display.update()
 
 def draw(screen):
