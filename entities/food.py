@@ -4,6 +4,7 @@ from constants import SCREEN_WIDTH, CELL_SIZE, SCREEN_HEIGHT
 
 class Food:
     def __init__(self):
+        self.position = None
         self.randomize_position()
 
     def randomize_position(self):

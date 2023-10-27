@@ -1,10 +1,11 @@
 from pygame.time import Clock
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BLACK
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BLACK, WHITE
 
 # Definir colores
 from entities.food import Food
 from entities.snake import Snake
+
 
 def main():
     pygame.init()
@@ -14,6 +15,8 @@ def main():
 
     in_menu = True
     dead = False
+
+    apple_count = 0
 
     snake = Snake()
     food = Food()
@@ -44,7 +47,7 @@ def main():
                 elif event.key == pygame.K_RIGHT:
                     snake.change_direction((1, 0))
         if not in_menu:
-            draw(screen)
+            draw(screen,apple_count)
             for segment in snake:
                 pygame.draw.rect(screen, (0, 255, 0), (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
             pygame.draw.rect(screen, (255, 0, 0), (food.position[0], food.position[1], CELL_SIZE, CELL_SIZE))
@@ -54,6 +57,7 @@ def main():
 
             if snake.body[0] == food.position:
                 snake.grow()
+                apple_count += 1
                 while True:
                     food.randomize_position()
                     if all(food.position != segment for segment in snake.body):
@@ -64,7 +68,7 @@ def main():
         pygame.display.update()
 
 
-def draw(screen):
+def draw(screen,apple_count):
     screen.fill((255, 255, 255))
 
     for x in range(0, SCREEN_WIDTH, CELL_SIZE):
@@ -79,6 +83,11 @@ def draw(screen):
     pygame.draw.rect(screen, BLACK, (0, 0, CELL_SIZE, SCREEN_HEIGHT))
     pygame.draw.rect(screen, BLACK, (0, SCREEN_HEIGHT - CELL_SIZE, SCREEN_WIDTH, CELL_SIZE))
     pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
+
+    # Dibujar el contador de manzanas en la esquina superior izquierda
+    font = pygame.font.Font(None, 24)
+    text = font.render(f"Manzanas: {apple_count}", True, WHITE)
+    screen.blit(text, (CELL_SIZE, CELL_SIZE // 2))
 
 
 def menu(screen, events):
@@ -105,6 +114,7 @@ def menu(screen, events):
             if button_rect.collidepoint(event.pos):
                 return True
     return False
+
 
 if __name__ == "__main__":
     main()
