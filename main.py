@@ -1,14 +1,10 @@
 from pygame.time import Clock
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BLACK
 
 # Definir colores
 from entities.food import Food
 from entities.snake import Snake
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
 
 def main():
     pygame.init()
@@ -17,9 +13,9 @@ def main():
     pygame.display.set_caption("Snake Game")
 
     in_menu = True
+    dead = False
 
     snake = Snake()
-    snake.grow()
     food = Food()
 
     last_update_time = pygame.time.get_ticks()
@@ -36,6 +32,8 @@ def main():
                 start_game = menu(screen, events)  # Pasa la lista de eventos a la función del menú
                 if start_game:
                     in_menu = False
+            if dead:
+                print("Has muerto")
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     snake.change_direction((0, -1))
@@ -54,9 +52,12 @@ def main():
         if current_time - last_update_time >= update_interval:
             snake.move()
 
-            if(snake.body[0] == food.position):
+            if snake.body[0] == food.position:
                 snake.grow()
-                food.randomize_position()
+                while True:
+                    food.randomize_position()
+                    if all(food.position != segment for segment in snake.body):
+                        break
 
             last_update_time = current_time
 
@@ -104,7 +105,6 @@ def menu(screen, events):
             if button_rect.collidepoint(event.pos):
                 return True
     return False
-
 
 if __name__ == "__main__":
     main()

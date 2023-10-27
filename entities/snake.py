@@ -7,6 +7,7 @@ class Snake:
         initial_y = (SCREEN_HEIGHT // 2 // CELL_SIZE) * CELL_SIZE
         self.body = [(initial_x, initial_y)]
         self.direction = (1,0)
+        self.grow()
 
     def move(self):
 
