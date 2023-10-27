@@ -3,10 +3,12 @@ import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE
 
 # Definir colores
+from entities.food import Food
 from entities.snake import Snake
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+
 
 def main():
     pygame.init()
@@ -16,8 +18,9 @@ def main():
 
     in_menu = True
 
-
     snake = Snake()
+    snake.grow()
+    food = Food()
 
     last_update_time = pygame.time.get_ticks()
     update_interval = 200  # Actualizar cada 100 milisegundos
@@ -35,27 +38,32 @@ def main():
                     in_menu = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    snake.change_direction((0,-1))
+                    snake.change_direction((0, -1))
                 elif event.key == pygame.K_DOWN:
-                    snake.change_direction((0,1))
+                    snake.change_direction((0, 1))
                 elif event.key == pygame.K_LEFT:
-                    snake.change_direction((-1,0))
+                    snake.change_direction((-1, 0))
                 elif event.key == pygame.K_RIGHT:
-                    snake.change_direction((1,0))
+                    snake.change_direction((1, 0))
         if not in_menu:
             draw(screen)
             for segment in snake:
-                pygame.draw.rect(screen,(0, 255, 0),(segment[0], segment[1], CELL_SIZE,CELL_SIZE))
+                pygame.draw.rect(screen, (0, 255, 0), (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
+            pygame.draw.rect(screen, (255, 0, 0), (food.position[0], food.position[1], CELL_SIZE, CELL_SIZE))
         current_time = pygame.time.get_ticks()
         if current_time - last_update_time >= update_interval:
             snake.move()
-            last_update_time = current_time
 
+            if(snake.body[0] == food.position):
+                snake.grow()
+                food.randomize_position()
+
+            last_update_time = current_time
 
         pygame.display.update()
 
-def draw(screen):
 
+def draw(screen):
     screen.fill((255, 255, 255))
 
     for x in range(0, SCREEN_WIDTH, CELL_SIZE):
@@ -71,21 +79,22 @@ def draw(screen):
     pygame.draw.rect(screen, BLACK, (0, SCREEN_HEIGHT - CELL_SIZE, SCREEN_WIDTH, CELL_SIZE))
     pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
 
+
 def menu(screen, events):
     screen.fill((255, 255, 255))
 
     # Dibuja el nombre del juego en el centro de la pantalla
     font = pygame.font.Font(None, 36)
-    text = font.render("Snake Game", True, (0,0,0))
+    text = font.render("Snake Game", True, (0, 0, 0))
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)
     screen.blit(text, text_rect)
 
     # Dibuja un botón de inicio
     button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50)
-    pygame.draw.rect(screen, (255,255,255), button_rect)
+    pygame.draw.rect(screen, (255, 255, 255), button_rect)
     font = pygame.font.Font(None, 24)
-    button_text = font.render("Start Game", True, (0,0,0))
+    button_text = font.render("Start Game", True, (0, 0, 0))
     button_text_rect = button_text.get_rect()
     button_text_rect.center = button_rect.center
     screen.blit(button_text, button_text_rect)
@@ -95,6 +104,7 @@ def menu(screen, events):
             if button_rect.collidepoint(event.pos):
                 return True
     return False
+
 
 if __name__ == "__main__":
     main()
