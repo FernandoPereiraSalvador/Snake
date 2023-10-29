@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
     FRAME_COLOR
@@ -56,7 +58,14 @@ def main():
             draw(screen, apple_count)
             for segment in snake:
                 pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
-            pygame.draw.rect(screen, (255, 0, 0), (food.position[0], food.position[1], CELL_SIZE, CELL_SIZE))
+            # Cargar la imagen de la comida
+            food_image = pygame.image.load(os.path.join("./resources", "apple.png"))
+
+            # Redimensionar la imagen al tamaño de la celda
+            food_image = pygame.transform.scale(food_image, (CELL_SIZE, CELL_SIZE))
+
+            # Dibujar la imagen redimensionada en la posición de la comida
+            screen.blit(food_image, (food.position[0], food.position[1]))
         current_time = pygame.time.get_ticks()
         if current_time - last_update_time >= update_interval:
             snake.move()
