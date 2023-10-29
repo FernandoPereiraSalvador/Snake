@@ -1,5 +1,6 @@
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BLACK, WHITE
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
+    FRAME_COLOR
 
 # Definir colores
 from entities.food import Food
@@ -54,7 +55,7 @@ def main():
         if not in_menu and not game_over:
             draw(screen, apple_count)
             for segment in snake:
-                pygame.draw.rect(screen, (0, 255, 0), (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
             pygame.draw.rect(screen, (255, 0, 0), (food.position[0], food.position[1], CELL_SIZE, CELL_SIZE))
         current_time = pygame.time.get_ticks()
         if current_time - last_update_time >= update_interval:
@@ -86,20 +87,20 @@ def draw(screen, apple_count):
     for x in range(0, SCREEN_WIDTH, CELL_SIZE):
         for y in range(0, SCREEN_HEIGHT, CELL_SIZE):
             if (x // CELL_SIZE + y // CELL_SIZE) % 2 == 0:
-                pygame.draw.rect(screen, (0, 0, 0), (x, y, CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(screen, GRID_COLOR_LIGHT, (x, y, CELL_SIZE, CELL_SIZE))
             else:
-                pygame.draw.rect(screen, (255, 255, 255), (x, y, CELL_SIZE, CELL_SIZE))
+                pygame.draw.rect(screen, GRID_COLOR_DARK, (x, y, CELL_SIZE, CELL_SIZE))
 
     # Dibujar el marco del juego
-    pygame.draw.rect(screen, BLACK, (0, 0, SCREEN_WIDTH, CELL_SIZE))
-    pygame.draw.rect(screen, BLACK, (0, 0, CELL_SIZE, SCREEN_HEIGHT))
-    pygame.draw.rect(screen, BLACK, (0, SCREEN_HEIGHT - CELL_SIZE, SCREEN_WIDTH, CELL_SIZE))
-    pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
+    pygame.draw.rect(screen, FRAME_COLOR, (0, 0, SCREEN_WIDTH, CELL_SIZE))
+    pygame.draw.rect(screen, FRAME_COLOR, (0, 0, CELL_SIZE, SCREEN_HEIGHT))
+    pygame.draw.rect(screen, FRAME_COLOR, (0, SCREEN_HEIGHT - CELL_SIZE, SCREEN_WIDTH, CELL_SIZE))
+    pygame.draw.rect(screen, FRAME_COLOR, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
 
     # Dibujar el contador de manzanas en la esquina superior izquierda
     font = pygame.font.Font(None, 24)
-    text = font.render(f"Manzanas: {apple_count}", True, WHITE)
-    screen.blit(text, (CELL_SIZE, CELL_SIZE // 2))
+    text = font.render(f"Manzanas: {apple_count}", True, (255,255,255))
+    screen.blit(text, (CELL_SIZE, CELL_SIZE // 2 - 8))
 
 
 def menu(screen, events):
