@@ -27,6 +27,9 @@ def main():
     while True:
         events = pygame.event.get()  # Obtener eventos en cada iteración
 
+        if dead:
+            return
+
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -35,8 +38,7 @@ def main():
                 start_game = menu(screen, events)  # Pasa la lista de eventos a la función del menú
                 if start_game:
                     in_menu = False
-            if dead:
-                print("Has muerto")
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     snake.change_direction((0, -1))
@@ -54,6 +56,13 @@ def main():
         current_time = pygame.time.get_ticks()
         if current_time - last_update_time >= update_interval:
             snake.move()
+            if any(snake.body[0] == segment for segment in snake.body[1:]) or (
+                    snake.body[0][0] < CELL_SIZE
+                    or snake.body[0][0] >= SCREEN_WIDTH - CELL_SIZE
+                    or snake.body[0][1] < CELL_SIZE
+                    or snake.body[0][1] >= SCREEN_HEIGHT - CELL_SIZE
+            ):
+                dead = True
 
             if snake.body[0] == food.position:
                 snake.grow()
