@@ -1,4 +1,3 @@
-from pygame.time import Clock
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, BLACK, WHITE
 
@@ -14,7 +13,7 @@ def main():
     pygame.display.set_caption("Snake Game")
 
     in_menu = True
-    dead = False
+    game_over = False
 
     apple_count = 0
 
@@ -27,9 +26,6 @@ def main():
     while True:
         events = pygame.event.get()  # Obtener eventos en cada iteración
 
-        if dead:
-            return
-
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -38,6 +34,13 @@ def main():
                 start_game = menu(screen, events)  # Pasa la lista de eventos a la función del menú
                 if start_game:
                     in_menu = False
+
+            if game_over:  # Si el juego está en estado "game over"
+                restart_game = dead_menu(screen, events)  # Llama a la función dead_menu
+                if restart_game:
+                    game_over = False
+                    apple_count = 0
+                    snake.reset()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -48,8 +51,8 @@ def main():
                     snake.change_direction((-1, 0))
                 elif event.key == pygame.K_RIGHT:
                     snake.change_direction((1, 0))
-        if not in_menu:
-            draw(screen,apple_count)
+        if not in_menu and not game_over:
+            draw(screen, apple_count)
             for segment in snake:
                 pygame.draw.rect(screen, (0, 255, 0), (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
             pygame.draw.rect(screen, (255, 0, 0), (food.position[0], food.position[1], CELL_SIZE, CELL_SIZE))
@@ -62,7 +65,7 @@ def main():
                     or snake.body[0][1] < CELL_SIZE
                     or snake.body[0][1] >= SCREEN_HEIGHT - CELL_SIZE
             ):
-                dead = True
+                game_over = True
 
             if snake.body[0] == food.position:
                 snake.grow()
@@ -77,7 +80,7 @@ def main():
         pygame.display.update()
 
 
-def draw(screen,apple_count):
+def draw(screen, apple_count):
     screen.fill((255, 255, 255))
 
     for x in range(0, SCREEN_WIDTH, CELL_SIZE):
@@ -122,6 +125,39 @@ def menu(screen, events):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if button_rect.collidepoint(event.pos):
                 return True
+    return False
+
+
+def dead_menu(screen, events):
+    screen.fill((255, 255, 255))
+
+    # Dibuja el nombre del juego en el centro de la pantalla
+    font = pygame.font.Font(None, 36)
+    text = font.render("Snake Game", True, (0, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)
+    screen.blit(text, text_rect)
+
+    # Dibuja el mensaje de "Dead" en el centro de la pantalla
+    font = pygame.font.Font(None, 36)
+    text = font.render("Dead", True, (0, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 150)
+    screen.blit(text, text_rect)
+
+    # Dibuja un botón para reiniciar el juego
+    button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50)
+    pygame.draw.rect(screen, (255, 255, 255), button_rect)
+    font = pygame.font.Font(None, 24)
+    button_text = font.render("Restart Game", True, (0, 0, 0))
+    button_text_rect = button_text.get_rect()
+    button_text_rect.center = button_rect.center
+    screen.blit(button_text, button_text_rect)
+
+    for event in events:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_rect.collidepoint(event.pos):
+                return True  # Si se hace clic en el botón de reiniciar, devuelve True
     return False
 
 

@@ -9,6 +9,13 @@ class Snake:
         self.direction = (1,0)
         self.grow()
 
+    def reset(self):
+        initial_x = (SCREEN_WIDTH // 2 // CELL_SIZE - 4) * CELL_SIZE
+        initial_y = (SCREEN_HEIGHT // 2 // CELL_SIZE) * CELL_SIZE
+        self.body = [(initial_x, initial_y)]
+        self.direction = (1, 0)
+        self.grow()
+
     def move(self):
 
         new_head = (
