@@ -32,6 +32,7 @@ def main():
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
+                pygame.quit()
                 return
             if in_menu:
                 start_game = menu(screen, events)  # Pasa la lista de eventos a la función del menú
@@ -66,26 +67,26 @@ def main():
 
             # Dibujar la imagen redimensionada en la posición de la comida
             screen.blit(food_image, (food.position[0], food.position[1]))
-        current_time = pygame.time.get_ticks()
-        if current_time - last_update_time >= update_interval:
-            snake.move()
-            if any(snake.body[0] == segment for segment in snake.body[1:]) or (
-                    snake.body[0][0] < CELL_SIZE
-                    or snake.body[0][0] >= SCREEN_WIDTH - CELL_SIZE
-                    or snake.body[0][1] < CELL_SIZE
-                    or snake.body[0][1] >= SCREEN_HEIGHT - CELL_SIZE
-            ):
-                game_over = True
+            current_time = pygame.time.get_ticks()
+            if current_time - last_update_time >= update_interval:
+                snake.move()
+                if any(snake.body[0] == segment for segment in snake.body[1:]) or (
+                        snake.body[0][0] < CELL_SIZE
+                        or snake.body[0][0] >= SCREEN_WIDTH - CELL_SIZE
+                        or snake.body[0][1] < CELL_SIZE
+                        or snake.body[0][1] >= SCREEN_HEIGHT - CELL_SIZE
+                ):
+                    game_over = True
 
-            if snake.body[0] == food.position:
-                snake.grow()
-                apple_count += 1
-                while True:
-                    food.randomize_position()
-                    if all(food.position != segment for segment in snake.body):
-                        break
+                if snake.body[0] == food.position:
+                    snake.grow()
+                    apple_count += 1
+                    while True:
+                        food.randomize_position()
+                        if all(food.position != segment for segment in snake.body):
+                            break
 
-            last_update_time = current_time
+                last_update_time = current_time
 
         pygame.display.update()
 
