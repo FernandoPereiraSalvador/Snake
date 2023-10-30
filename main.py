@@ -110,9 +110,22 @@ def draw(screen, apple_count):
     pygame.draw.rect(screen, FRAME_COLOR, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
 
     # Dibujar el contador de manzanas en la esquina superior izquierda
+    apple_image = pygame.image.load(os.path.join("resources", "apple.png"))
+    apple_image = pygame.transform.scale(apple_image, (CELL_SIZE-15, CELL_SIZE-15))
+    screen.blit(apple_image, (CELL_SIZE, CELL_SIZE // 2 - 13))
+
     font = pygame.font.Font(None, 24)
-    text = font.render(f"Manzanas: {apple_count}", True, (255,255,255))
-    screen.blit(text, (CELL_SIZE, CELL_SIZE // 2 - 8))
+    text = font.render(f" : {apple_count}", True, (255, 255, 255))
+    screen.blit(text, (CELL_SIZE + apple_image.get_width(), CELL_SIZE // 2 - 8))
+
+    # Dibujar el contador de records en la esquina superior izquierda
+    trophy_image = pygame.image.load(os.path.join("resources", "trophy.png"))
+    trophy_image = pygame.transform.scale(trophy_image, (CELL_SIZE - 15, CELL_SIZE - 15))
+    screen.blit(trophy_image, (CELL_SIZE*3, CELL_SIZE // 2 - 13))
+
+    font = pygame.font.Font(None, 24)
+    text = font.render(f" : {apple_count}", True, (255, 255, 255))
+    screen.blit(text, ((CELL_SIZE + trophy_image.get_width()*4)+5, CELL_SIZE // 2 - 8))
 
 
 def menu(screen, events):
