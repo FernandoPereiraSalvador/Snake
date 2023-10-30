@@ -1,10 +1,10 @@
 import os
+import time
 
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
     FRAME_COLOR
 
-# Definir colores
 from entities.food import Food
 from entities.snake import Snake
 
@@ -39,13 +39,6 @@ def main():
                 if start_game:
                     in_menu = False
 
-            if game_over:  # Si el juego está en estado "game over"
-                restart_game = dead_menu(screen, events)  # Llama a la función dead_menu
-                if restart_game:
-                    game_over = False
-                    apple_count = 0
-                    snake.reset()
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     snake.change_direction((0, -1))
@@ -55,6 +48,7 @@ def main():
                     snake.change_direction((-1, 0))
                 elif event.key == pygame.K_RIGHT:
                     snake.change_direction((1, 0))
+
         if not in_menu and not game_over:
             draw(screen, apple_count)
             for segment in snake:
@@ -88,6 +82,14 @@ def main():
 
                 last_update_time = current_time
 
+        if game_over:  # Si el juego está en estado "game over"
+            time.sleep(0.5)
+            restart_game = dead_menu(screen, events)  # Llama a la función dead_menu
+            if restart_game:
+                game_over = False
+                apple_count = 0
+                snake.reset()
+
         pygame.display.update()
 
 
@@ -114,7 +116,7 @@ def draw(screen, apple_count):
 
 
 def menu(screen, events):
-    screen.fill((255, 255, 255))
+    screen.fill(GRID_COLOR_LIGHT)
 
     # Dibuja el nombre del juego en el centro de la pantalla
     font = pygame.font.Font(None, 36)
@@ -125,7 +127,7 @@ def menu(screen, events):
 
     # Dibuja un botón de inicio
     button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50)
-    pygame.draw.rect(screen, (255, 255, 255), button_rect)
+    pygame.draw.rect(screen, GRID_COLOR_DARK, button_rect)
     font = pygame.font.Font(None, 24)
     button_text = font.render("Start Game", True, (0, 0, 0))
     button_text_rect = button_text.get_rect()
@@ -140,7 +142,7 @@ def menu(screen, events):
 
 
 def dead_menu(screen, events):
-    screen.fill((255, 255, 255))
+    screen.fill(GRID_COLOR_LIGHT)
 
     # Dibuja el nombre del juego en el centro de la pantalla
     font = pygame.font.Font(None, 36)
@@ -158,7 +160,7 @@ def dead_menu(screen, events):
 
     # Dibuja un botón para reiniciar el juego
     button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50)
-    pygame.draw.rect(screen, (255, 255, 255), button_rect)
+    pygame.draw.rect(screen, GRID_COLOR_DARK, button_rect)
     font = pygame.font.Font(None, 24)
     button_text = font.render("Restart Game", True, (0, 0, 0))
     button_text_rect = button_text.get_rect()
