@@ -52,8 +52,40 @@ def main():
 
         if not in_menu and not game_over:
             draw(screen, apple_count)
-            for segment in snake:
-                pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
+            for i, segment in enumerate(snake):
+                if i == 0:
+                    # Dibuja el rectángulo de la cabeza en el color del snake
+                    pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
+
+                    # Determina la posición de los ojos en función de la orientación de la cabeza
+                    eye_positions = []
+                    if snake.direction == (0, -1): # Up
+                        eye_positions = [(segment[0] + CELL_SIZE // 3, segment[1] + CELL_SIZE // 4),
+                                         (segment[0] + 2 * CELL_SIZE // 3, segment[1] + CELL_SIZE // 4)]
+                    elif snake.direction == (0, 1): # Down
+                        eye_positions = [(segment[0] + CELL_SIZE // 3, segment[1] + 2 * CELL_SIZE // 3),
+                                         (segment[0] + 2 * CELL_SIZE // 3, segment[1] + 2 * CELL_SIZE // 3)]
+
+                    elif snake.direction == (-1, 0): #Left
+                        eye_positions = [(segment[0] + CELL_SIZE // 4, segment[1] + CELL_SIZE // 3),
+                                         (segment[0] + CELL_SIZE // 4, segment[1] + 2 * CELL_SIZE // 3)]
+                    elif snake.direction == (1, 0): #Right
+                        eye_positions = [(segment[0] + 2 * CELL_SIZE // 3, segment[1] + CELL_SIZE // 3),
+                                         (segment[0] + 2 * CELL_SIZE // 3, segment[1] + 2 * CELL_SIZE // 3)]
+
+                    # Dibuja los ojos como rectángulos blancos
+                    for eye_position in eye_positions:
+                        pygame.draw.rect(screen, (255, 255, 255),
+                                         (eye_position[0], eye_position[1], CELL_SIZE // 6, CELL_SIZE // 6))
+
+                    # Dibuja las pupilas como rectángulos negros (en el centro de los ojos)
+                    for eye_position in eye_positions:
+                        pygame.draw.rect(screen, (0, 0, 0), (
+                        eye_position[0] + CELL_SIZE // 12, eye_position[1] + CELL_SIZE // 12, CELL_SIZE // 12,
+                        CELL_SIZE // 12))
+                else:
+                    # Dibuja el resto de los segmentos del snake como lo hacías antes
+                    pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
             # Cargar la imagen de la comida
             food_image = pygame.image.load(os.path.join("./resources", "apple.png"))
 
