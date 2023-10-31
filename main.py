@@ -7,6 +7,7 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, G
 
 from entities.food import Food
 from entities.snake import Snake
+from utils.record_utils import get_record, save_record
 
 
 def main():
@@ -83,6 +84,7 @@ def main():
                 last_update_time = current_time
 
         if game_over:  # Si el juego está en estado "game over"
+            save_record(apple_count)
             time.sleep(0.5)
             restart_game = dead_menu(screen, events)  # Llama a la función dead_menu
             if restart_game:
@@ -124,7 +126,7 @@ def draw(screen, apple_count):
     screen.blit(trophy_image, (CELL_SIZE*3, CELL_SIZE // 2 - 13))
 
     font = pygame.font.Font(None, 24)
-    text = font.render(f" : {apple_count}", True, (255, 255, 255))
+    text = font.render(f" : {get_record()}", True, (255, 255, 255))
     screen.blit(text, ((CELL_SIZE + trophy_image.get_width()*4)+5, CELL_SIZE // 2 - 8))
 
 
