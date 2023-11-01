@@ -3,18 +3,25 @@ import time
 
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
-    FRAME_COLOR, UPDATE_INTERVAL
+    FRAME_COLOR, UPDATE_INTERVAL, BACKGROUND_MUSIC
 from game import Game
 
 from utils.record_utils import get_record, save_record
 
 def main():
     pygame.init()
+    pygame.mixer.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Snake Game")
 
     game = Game()
+
+
+    # Iniciar la música si está habilitada
+    if game.sond:
+        pygame.mixer.music.load(BACKGROUND_MUSIC)
+        pygame.mixer.music.play(-1)  # Reproducir la música en un bucle infinito
 
     while True:
         events = pygame.event.get()  # Obtener eventos en cada iteración
@@ -39,8 +46,13 @@ def main():
                 elif event.key == pygame.K_RIGHT:
                     game.snake.change_direction((1, 0))
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if pygame.Rect(CELL_SIZE * 13 + 10, CELL_SIZE // 2 - 13, CELL_SIZE - 15, CELL_SIZE - 15).collidepoint(event.pos):
+                        game.toggle_music()
+
         if not game.in_menu and not game.game_over:
-            draw(screen, game.food_count)
+            draw(screen, game)
             for i, segment in enumerate(game.snake):
                 if i == 0:
                     # Dibuja el rectángulo de la cabeza en el color del snake
@@ -116,9 +128,10 @@ def main():
         pygame.display.update()
 
 
-def draw(screen, apple_count):
+def draw(screen,game):
     screen.fill((255, 255, 255))
 
+    # Dibujar las casillas
     for x in range(0, SCREEN_WIDTH, CELL_SIZE):
         for y in range(0, SCREEN_HEIGHT, CELL_SIZE):
             if (x // CELL_SIZE + y // CELL_SIZE) % 2 == 0:
@@ -138,7 +151,7 @@ def draw(screen, apple_count):
     screen.blit(apple_image, (CELL_SIZE, CELL_SIZE // 2 - 13))
 
     font = pygame.font.Font(None, 24)
-    text = font.render(f" : {apple_count}", True, (255, 255, 255))
+    text = font.render(f" : {game.food_count}", True, (255, 255, 255))
     screen.blit(text, (CELL_SIZE + apple_image.get_width(), CELL_SIZE // 2 - 8))
 
     # Dibujar el contador de records en la esquina superior izquierda
@@ -149,6 +162,24 @@ def draw(screen, apple_count):
     font = pygame.font.Font(None, 24)
     text = font.render(f" : {get_record()}", True, (255, 255, 255))
     screen.blit(text, ((CELL_SIZE + trophy_image.get_width()*4)+5, CELL_SIZE // 2 - 8))
+
+    # Dibujar el contador de records en la esquina superior izquierda
+    trophy_image = pygame.image.load(os.path.join("resources", "trophy.png"))
+    trophy_image = pygame.transform.scale(trophy_image, (CELL_SIZE - 15, CELL_SIZE - 15))
+    screen.blit(trophy_image, (CELL_SIZE * 3, CELL_SIZE // 2 - 13))
+
+    font = pygame.font.Font(None, 24)
+    text = font.render(f" : {get_record()}", True, (255, 255, 255))
+    screen.blit(text, ((CELL_SIZE + trophy_image.get_width() * 4) + 5, CELL_SIZE // 2 - 8))
+
+    # Dibujar boton sonido
+    if game.sond:
+        sound_image = pygame.image.load(os.path.join("resources", "sound_true.png"))
+    else:
+        sound_image = pygame.image.load(os.path.join("resources", "sound_false.png"))
+
+    sound_image = pygame.transform.scale(sound_image, (CELL_SIZE - 15, CELL_SIZE - 15))
+    screen.blit(sound_image, (CELL_SIZE * 13 + 10, CELL_SIZE // 2 - 13))
 
 
 def menu(screen, events):

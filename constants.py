@@ -9,5 +9,6 @@ GRID_COLOR_DARK = (142, 198, 70)  # Verde oscuro
 FRAME_COLOR = (75, 123, 46)
 
 RECORD_FILE = os.path.join("resources", "record.txt")
+BACKGROUND_MUSIC = os.path.join("resources", "music_theme.mp3")
 
 UPDATE_INTERVAL = 200

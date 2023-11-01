@@ -16,3 +16,12 @@ class Game:
 
         self.last_update_time = pygame.time.get_ticks()
 
+        self.sond = True
+
+    def toggle_music(self):
+        self.sond = not self.sond
+        if self.sond:
+            pygame.mixer.music.unpause()
+        else:
+            pygame.mixer.music.pause()
+
