@@ -3,12 +3,10 @@ import time
 
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
-    FRAME_COLOR
+    FRAME_COLOR, UPDATE_INTERVAL
+from game import Game
 
-from entities.food import Food
-from entities.snake import Snake
 from utils.record_utils import get_record, save_record
-
 
 def main():
     pygame.init()
@@ -16,16 +14,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Snake Game")
 
-    in_menu = True
-    game_over = False
-
-    apple_count = 0
-
-    snake = Snake()
-    food = Food()
-
-    last_update_time = pygame.time.get_ticks()
-    update_interval = 200  # Actualizar cada 100 milisegundos
+    game = Game()
 
     while True:
         events = pygame.event.get()  # Obtener eventos en cada iteración
@@ -35,41 +24,41 @@ def main():
                 pygame.quit()
                 pygame.quit()
                 return
-            if in_menu:
+            if game.in_menu:
                 start_game = menu(screen, events)  # Pasa la lista de eventos a la función del menú
                 if start_game:
-                    in_menu = False
+                    game.in_menu = False
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    snake.change_direction((0, -1))
+                    game.snake.change_direction((0, -1))
                 elif event.key == pygame.K_DOWN:
-                    snake.change_direction((0, 1))
+                    game.snake.change_direction((0, 1))
                 elif event.key == pygame.K_LEFT:
-                    snake.change_direction((-1, 0))
+                    game.snake.change_direction((-1, 0))
                 elif event.key == pygame.K_RIGHT:
-                    snake.change_direction((1, 0))
+                    game.snake.change_direction((1, 0))
 
-        if not in_menu and not game_over:
-            draw(screen, apple_count)
-            for i, segment in enumerate(snake):
+        if not game.in_menu and not game.game_over:
+            draw(screen, game.food_count)
+            for i, segment in enumerate(game.snake):
                 if i == 0:
                     # Dibuja el rectángulo de la cabeza en el color del snake
                     pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
 
                     # Determina la posición de los ojos en función de la orientación de la cabeza
                     eye_positions = []
-                    if snake.direction == (0, -1): # Up
+                    if game.snake.direction == (0, -1): # Up
                         eye_positions = [(segment[0] + CELL_SIZE // 3, segment[1] + CELL_SIZE // 4),
                                          (segment[0] + 2 * CELL_SIZE // 3, segment[1] + CELL_SIZE // 4)]
-                    elif snake.direction == (0, 1): # Down
+                    elif game.snake.direction == (0, 1): # Down
                         eye_positions = [(segment[0] + CELL_SIZE // 3, segment[1] + 2 * CELL_SIZE // 3),
                                          (segment[0] + 2 * CELL_SIZE // 3, segment[1] + 2 * CELL_SIZE // 3)]
 
-                    elif snake.direction == (-1, 0): #Left
+                    elif game.snake.direction == (-1, 0): #Left
                         eye_positions = [(segment[0] + CELL_SIZE // 4, segment[1] + CELL_SIZE // 3),
                                          (segment[0] + CELL_SIZE // 4, segment[1] + 2 * CELL_SIZE // 3)]
-                    elif snake.direction == (1, 0): #Right
+                    elif game.snake.direction == (1, 0): #Right
                         eye_positions = [(segment[0] + 2 * CELL_SIZE // 3, segment[1] + CELL_SIZE // 3),
                                          (segment[0] + 2 * CELL_SIZE // 3, segment[1] + 2 * CELL_SIZE // 3)]
 
@@ -93,36 +82,36 @@ def main():
             food_image = pygame.transform.scale(food_image, (CELL_SIZE, CELL_SIZE))
 
             # Dibujar la imagen redimensionada en la posición de la comida
-            screen.blit(food_image, (food.position[0], food.position[1]))
+            screen.blit(food_image, (game.food.position[0], game.food.position[1]))
             current_time = pygame.time.get_ticks()
-            if current_time - last_update_time >= update_interval:
-                snake.move()
-                if any(snake.body[0] == segment for segment in snake.body[1:]) or (
-                        snake.body[0][0] < CELL_SIZE
-                        or snake.body[0][0] >= SCREEN_WIDTH - CELL_SIZE
-                        or snake.body[0][1] < CELL_SIZE
-                        or snake.body[0][1] >= SCREEN_HEIGHT - CELL_SIZE
+            if current_time - game.last_update_time >= UPDATE_INTERVAL:
+                game.snake.move()
+                if any(game.snake.body[0] == segment for segment in game.snake.body[1:]) or (
+                        game.snake.body[0][0] < CELL_SIZE
+                        or game.snake.body[0][0] >= SCREEN_WIDTH - CELL_SIZE
+                        or game.snake.body[0][1] < CELL_SIZE
+                        or game.snake.body[0][1] >= SCREEN_HEIGHT - CELL_SIZE
                 ):
-                    game_over = True
+                    game.game_over = True
 
-                if snake.body[0] == food.position:
-                    snake.grow()
-                    apple_count += 1
+                if game.snake.body[0] == game.food.position:
+                    game.snake.grow()
+                    game.food_count += 1
                     while True:
-                        food.randomize_position()
-                        if all(food.position != segment for segment in snake.body):
+                        game.food.randomize_position()
+                        if all(game.food.position != segment for segment in game.snake.body):
                             break
 
-                last_update_time = current_time
+                game.last_update_time = current_time
 
-        if game_over:  # Si el juego está en estado "game over"
-            save_record(apple_count)
+        if game.game_over:  # Si el juego está en estado "game over"
+            save_record(game.food_count)
             time.sleep(0.5)
             restart_game = dead_menu(screen, events)  # Llama a la función dead_menu
             if restart_game:
-                game_over = False
-                apple_count = 0
-                snake.reset()
+                game.game_over = False
+                game.food_count = 0
+                game.snake.reset()
 
         pygame.display.update()
 
