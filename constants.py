@@ -13,4 +13,7 @@ BACKGROUND_MUSIC = os.path.join("resources/sound", "music_theme.mp3")
 APPLE_BIT = os.path.join("resources/sound", "apple_bit.mp3")
 DEAD_SOUND = os.path.join("resources/sound", "dead.mp3")
 
+APPLE_IMAGE = os.path.join("resources/images", "apple.png")
+TROPHY_IMAGE = os.path.join("resources/images", "trophy.png")
+
 UPDATE_INTERVAL = 200

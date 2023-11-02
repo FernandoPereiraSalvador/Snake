@@ -3,7 +3,7 @@ import time
 
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
-    FRAME_COLOR, UPDATE_INTERVAL, BACKGROUND_MUSIC, APPLE_BIT, DEAD_SOUND
+    FRAME_COLOR, UPDATE_INTERVAL, BACKGROUND_MUSIC, APPLE_BIT, DEAD_SOUND, APPLE_IMAGE, TROPHY_IMAGE
 from game import Game
 
 from utils.record_utils import get_record, save_record
@@ -14,7 +14,7 @@ def main():
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Snake Game")
-    icon_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
+    icon_image = pygame.image.load(APPLE_IMAGE)
     pygame.display.set_icon(icon_image)
 
     game = Game()
@@ -90,7 +90,7 @@ def main():
                     # Dibuja el resto de los segmentos del snake como lo hacías antes
                     pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
             # Cargar la imagen de la comida
-            food_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
+            food_image = pygame.image.load(APPLE_IMAGE)
 
             # Redimensionar la imagen al tamaño de la celda
             food_image = pygame.transform.scale(food_image, (CELL_SIZE, CELL_SIZE))
@@ -152,7 +152,7 @@ def draw(screen,game):
     pygame.draw.rect(screen, FRAME_COLOR, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
 
     # Dibujar el contador de manzanas en la esquina superior izquierda
-    apple_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
+    apple_image = pygame.image.load(APPLE_IMAGE)
     apple_image = pygame.transform.scale(apple_image, (CELL_SIZE-15, CELL_SIZE-15))
     screen.blit(apple_image, (CELL_SIZE, CELL_SIZE // 2 - 13))
 
@@ -161,7 +161,7 @@ def draw(screen,game):
     screen.blit(text, (CELL_SIZE + apple_image.get_width(), CELL_SIZE // 2 - 8))
 
     # Dibujar el contador de records en la esquina superior izquierda
-    trophy_image = pygame.image.load(os.path.join("resources/images", "trophy.png"))
+    trophy_image = pygame.image.load(TROPHY_IMAGE)
     trophy_image = pygame.transform.scale(trophy_image, (CELL_SIZE - 15, CELL_SIZE - 15))
     screen.blit(trophy_image, (CELL_SIZE*3, CELL_SIZE // 2 - 13))
 
@@ -170,7 +170,7 @@ def draw(screen,game):
     screen.blit(text, ((CELL_SIZE + trophy_image.get_width()*4)+5, CELL_SIZE // 2 - 8))
 
     # Dibujar el contador de records en la esquina superior izquierda
-    trophy_image = pygame.image.load(os.path.join("resources/images", "trophy.png"))
+    trophy_image = pygame.image.load(TROPHY_IMAGE)
     trophy_image = pygame.transform.scale(trophy_image, (CELL_SIZE - 15, CELL_SIZE - 15))
     screen.blit(trophy_image, (CELL_SIZE * 3, CELL_SIZE // 2 - 13))
 
@@ -192,7 +192,7 @@ def menu(screen, events):
     screen.fill(GRID_COLOR_LIGHT)
 
     # Dibuja la imagen de una manzana en el centro de la pantalla
-    apple_image = pygame.image.load(os.path.join("resources/images", "trophy.png"))
+    apple_image = pygame.image.load(TROPHY_IMAGE)
     apple_image = pygame.transform.scale(apple_image, (CELL_SIZE * 2, CELL_SIZE * 2))
     apple_rect = apple_image.get_rect()
     apple_rect.center = (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 60)
@@ -239,7 +239,7 @@ def dead_menu(screen, events, game):
     screen.fill(GRID_COLOR_LIGHT)
 
     # Dibuja la imagen de una manzana en el centro de la pantalla
-    apple_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
+    apple_image = pygame.image.load(APPLE_IMAGE)
     apple_image = pygame.transform.scale(apple_image, (CELL_SIZE*2, CELL_SIZE*2))
     apple_rect = apple_image.get_rect()
     apple_rect.center = (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 60)
