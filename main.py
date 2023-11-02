@@ -3,7 +3,7 @@ import time
 
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
-    FRAME_COLOR, UPDATE_INTERVAL, BACKGROUND_MUSIC
+    FRAME_COLOR, UPDATE_INTERVAL, BACKGROUND_MUSIC, APPLE_BIT, DEAD_SOUND
 from game import Game
 
 from utils.record_utils import get_record, save_record
@@ -17,11 +17,11 @@ def main():
 
     game = Game()
 
-
-    # Iniciar la música si está habilitada
-    if game.sond:
-        pygame.mixer.music.load(BACKGROUND_MUSIC)
-        pygame.mixer.music.play(-1)  # Reproducir la música en un bucle infinito
+    # Iniciar la música
+    apple_sound = pygame.mixer.Sound(APPLE_BIT)
+    dead_sound = pygame.mixer.Sound(DEAD_SOUND)
+    pygame.mixer.music.load(BACKGROUND_MUSIC)
+    pygame.mixer.music.play(-1)  # Reproducir la música en un bucle infinito
 
     while True:
         events = pygame.event.get()  # Obtener eventos en cada iteración
@@ -88,7 +88,7 @@ def main():
                     # Dibuja el resto de los segmentos del snake como lo hacías antes
                     pygame.draw.rect(screen, SNAKE_COLOR, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
             # Cargar la imagen de la comida
-            food_image = pygame.image.load(os.path.join("./resources", "apple.png"))
+            food_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
 
             # Redimensionar la imagen al tamaño de la celda
             food_image = pygame.transform.scale(food_image, (CELL_SIZE, CELL_SIZE))
@@ -104,11 +104,15 @@ def main():
                         or game.snake.body[0][1] < CELL_SIZE
                         or game.snake.body[0][1] >= SCREEN_HEIGHT - CELL_SIZE
                 ):
+                    if game.sond:
+                        dead_sound.play()
                     game.game_over = True
 
                 if game.snake.body[0] == game.food.position:
                     game.snake.grow()
                     game.food_count += 1
+                    if game.sond:
+                        apple_sound.play()
                     while True:
                         game.food.randomize_position()
                         if all(game.food.position != segment for segment in game.snake.body):
@@ -146,7 +150,7 @@ def draw(screen,game):
     pygame.draw.rect(screen, FRAME_COLOR, (SCREEN_WIDTH - CELL_SIZE, 0, CELL_SIZE, SCREEN_HEIGHT))
 
     # Dibujar el contador de manzanas en la esquina superior izquierda
-    apple_image = pygame.image.load(os.path.join("resources", "apple.png"))
+    apple_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
     apple_image = pygame.transform.scale(apple_image, (CELL_SIZE-15, CELL_SIZE-15))
     screen.blit(apple_image, (CELL_SIZE, CELL_SIZE // 2 - 13))
 
@@ -155,7 +159,7 @@ def draw(screen,game):
     screen.blit(text, (CELL_SIZE + apple_image.get_width(), CELL_SIZE // 2 - 8))
 
     # Dibujar el contador de records en la esquina superior izquierda
-    trophy_image = pygame.image.load(os.path.join("resources", "trophy.png"))
+    trophy_image = pygame.image.load(os.path.join("resources/images", "trophy.png"))
     trophy_image = pygame.transform.scale(trophy_image, (CELL_SIZE - 15, CELL_SIZE - 15))
     screen.blit(trophy_image, (CELL_SIZE*3, CELL_SIZE // 2 - 13))
 
@@ -164,7 +168,7 @@ def draw(screen,game):
     screen.blit(text, ((CELL_SIZE + trophy_image.get_width()*4)+5, CELL_SIZE // 2 - 8))
 
     # Dibujar el contador de records en la esquina superior izquierda
-    trophy_image = pygame.image.load(os.path.join("resources", "trophy.png"))
+    trophy_image = pygame.image.load(os.path.join("resources/images", "trophy.png"))
     trophy_image = pygame.transform.scale(trophy_image, (CELL_SIZE - 15, CELL_SIZE - 15))
     screen.blit(trophy_image, (CELL_SIZE * 3, CELL_SIZE // 2 - 13))
 
@@ -174,9 +178,9 @@ def draw(screen,game):
 
     # Dibujar boton sonido
     if game.sond:
-        sound_image = pygame.image.load(os.path.join("resources", "sound_true.png"))
+        sound_image = pygame.image.load(os.path.join("resources/images", "sound_true.png"))
     else:
-        sound_image = pygame.image.load(os.path.join("resources", "sound_false.png"))
+        sound_image = pygame.image.load(os.path.join("resources/images", "sound_false.png"))
 
     sound_image = pygame.transform.scale(sound_image, (CELL_SIZE - 15, CELL_SIZE - 15))
     screen.blit(sound_image, (CELL_SIZE * 13 + 10, CELL_SIZE // 2 - 13))
