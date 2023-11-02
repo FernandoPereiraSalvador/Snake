@@ -14,6 +14,8 @@ def main():
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Snake Game")
+    icon_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
+    pygame.display.set_icon(icon_image)
 
     game = Game()
 
