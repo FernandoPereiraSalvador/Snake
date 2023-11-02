@@ -123,7 +123,7 @@ def main():
         if game.game_over:  # Si el juego está en estado "game over"
             save_record(game.food_count)
             time.sleep(0.5)
-            restart_game = dead_menu(screen, events)  # Llama a la función dead_menu
+            restart_game = dead_menu(screen, events,game)  # Llama a la función dead_menu
             if restart_game:
                 game.game_over = False
                 game.food_count = 0
@@ -212,19 +212,33 @@ def menu(screen, events):
     return False
 
 
-def dead_menu(screen, events):
+def dead_menu(screen, events, game):
     screen.fill(GRID_COLOR_LIGHT)
 
-    # Dibuja el nombre del juego en el centro de la pantalla
-    font = pygame.font.Font(None, 36)
-    text = font.render("Snake Game", True, (0, 0, 0))
-    text_rect = text.get_rect()
-    text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)
-    screen.blit(text, text_rect)
+    # Dibuja la imagen de una manzana en el centro de la pantalla
+    apple_image = pygame.image.load(os.path.join("resources/images", "apple.png"))
+    apple_image = pygame.transform.scale(apple_image, (CELL_SIZE*2, CELL_SIZE*2))
+    apple_rect = apple_image.get_rect()
+    apple_rect.center = (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 60)
+    screen.blit(apple_image, apple_rect)
+
+    # Dibuja ":" en el centro de la pantalla
+    font = pygame.font.Font(None, 60)
+    colon_text = font.render(":", True, (0, 0, 0))
+    colon_rect = colon_text.get_rect()
+    colon_rect.center = (SCREEN_WIDTH // 2 + 10, SCREEN_HEIGHT // 2 -60)
+    screen.blit(colon_text, colon_rect)
+
+    # Dibuja el número de manzanas que se han comido
+    font = pygame.font.Font(None, 60)
+    points_text = font.render(str(game.food_count), True, (0, 0, 0))
+    points_rect = points_text.get_rect()
+    points_rect.center = (SCREEN_WIDTH // 2 + 50, SCREEN_HEIGHT // 2 -55)
+    screen.blit(points_text, points_rect)
 
     # Dibuja el mensaje de "Dead" en el centro de la pantalla
     font = pygame.font.Font(None, 36)
-    text = font.render("Dead", True, (0, 0, 0))
+    text = font.render("You're dead", True, (0, 0, 0))
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 150)
     screen.blit(text, text_rect)
@@ -243,6 +257,7 @@ def dead_menu(screen, events):
             if button_rect.collidepoint(event.pos):
                 return True  # Si se hace clic en el botón de reiniciar, devuelve True
     return False
+
 
 
 if __name__ == "__main__":
