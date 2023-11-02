@@ -189,18 +189,39 @@ def draw(screen,game):
 def menu(screen, events):
     screen.fill(GRID_COLOR_LIGHT)
 
+    # Dibuja la imagen de una manzana en el centro de la pantalla
+    apple_image = pygame.image.load(os.path.join("resources/images", "trophy.png"))
+    apple_image = pygame.transform.scale(apple_image, (CELL_SIZE * 2, CELL_SIZE * 2))
+    apple_rect = apple_image.get_rect()
+    apple_rect.center = (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 60)
+    screen.blit(apple_image, apple_rect)
+
+    # Dibuja ":" en el centro de la pantalla
+    font = pygame.font.Font(None, 60)
+    colon_text = font.render(":", True, (255, 255, 255))  # Cambio de color a blanco
+    colon_rect = colon_text.get_rect()
+    colon_rect.center = (SCREEN_WIDTH // 2 + 10, SCREEN_HEIGHT // 2 - 60)
+    screen.blit(colon_text, colon_rect)
+
+    # Dibuja el número de manzanas que se han comido
+    font = pygame.font.Font(None, 60)
+    points_text = font.render(str(get_record()), True, (255, 255, 255))  # Cambio de color a blanco
+    points_rect = points_text.get_rect()
+    points_rect.center = (SCREEN_WIDTH // 2 + 50, SCREEN_HEIGHT // 2 - 55)
+    screen.blit(points_text, points_rect)
+
     # Dibuja el nombre del juego en el centro de la pantalla
     font = pygame.font.Font(None, 36)
-    text = font.render("Snake Game", True, (0, 0, 0))
+    text = font.render("Snake Game", True, (255, 255, 255))
     text_rect = text.get_rect()
-    text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)
+    text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 150)
     screen.blit(text, text_rect)
 
     # Dibuja un botón de inicio
     button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50)
     pygame.draw.rect(screen, GRID_COLOR_DARK, button_rect)
     font = pygame.font.Font(None, 24)
-    button_text = font.render("Start Game", True, (0, 0, 0))
+    button_text = font.render("Start Game", True, (255, 255, 255))
     button_text_rect = button_text.get_rect()
     button_text_rect.center = button_rect.center
     screen.blit(button_text, button_text_rect)
@@ -224,21 +245,21 @@ def dead_menu(screen, events, game):
 
     # Dibuja ":" en el centro de la pantalla
     font = pygame.font.Font(None, 60)
-    colon_text = font.render(":", True, (0, 0, 0))
+    colon_text = font.render(":", True, (255, 255, 255))  # Cambio de color a blanco
     colon_rect = colon_text.get_rect()
-    colon_rect.center = (SCREEN_WIDTH // 2 + 10, SCREEN_HEIGHT // 2 -60)
+    colon_rect.center = (SCREEN_WIDTH // 2 + 10, SCREEN_HEIGHT // 2 - 60)
     screen.blit(colon_text, colon_rect)
 
     # Dibuja el número de manzanas que se han comido
     font = pygame.font.Font(None, 60)
-    points_text = font.render(str(game.food_count), True, (0, 0, 0))
+    points_text = font.render(str(game.food_count), True, (255, 255, 255))  # Cambio de color a blanco
     points_rect = points_text.get_rect()
-    points_rect.center = (SCREEN_WIDTH // 2 + 50, SCREEN_HEIGHT // 2 -55)
+    points_rect.center = (SCREEN_WIDTH // 2 + 50, SCREEN_HEIGHT // 2 - 55)
     screen.blit(points_text, points_rect)
 
     # Dibuja el mensaje de "Dead" en el centro de la pantalla
     font = pygame.font.Font(None, 36)
-    text = font.render("You're dead", True, (0, 0, 0))
+    text = font.render("You're dead", True, (255, 255, 255))  # Cambio de color a blanco
     text_rect = text.get_rect()
     text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 150)
     screen.blit(text, text_rect)
@@ -247,7 +268,7 @@ def dead_menu(screen, events, game):
     button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 50)
     pygame.draw.rect(screen, GRID_COLOR_DARK, button_rect)
     font = pygame.font.Font(None, 24)
-    button_text = font.render("Restart Game", True, (0, 0, 0))
+    button_text = font.render("Restart Game", True, (255, 255, 255))  # Cambio de color a blanco
     button_text_rect = button_text.get_rect()
     button_text_rect.center = button_rect.center
     screen.blit(button_text, button_text_rect)
