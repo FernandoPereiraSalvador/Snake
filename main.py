@@ -3,7 +3,8 @@ import time
 
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, CELL_SIZE, GRID_COLOR_DARK, GRID_COLOR_LIGHT, SNAKE_COLOR, \
-    FRAME_COLOR, UPDATE_INTERVAL, BACKGROUND_MUSIC, APPLE_BIT, DEAD_SOUND, APPLE_IMAGE, TROPHY_IMAGE
+    FRAME_COLOR, UPDATE_INTERVAL, BACKGROUND_MUSIC, APPLE_BIT, DEAD_SOUND, APPLE_IMAGE, TROPHY_IMAGE, SOUND_TRUE, \
+    SOUND_FALSE
 from game import Game
 
 from utils.record_utils import get_record, save_record
@@ -214,9 +215,9 @@ def draw(screen,game):
 
     # Draw sound button if deactivated or not
     if game.sond:
-        sound_image = pygame.image.load(os.path.join("resources/images", "sound_true.png"))
+        sound_image = pygame.image.load(SOUND_TRUE)
     else:
-        sound_image = pygame.image.load(os.path.join("resources/images", "sound_false.png"))
+        sound_image = pygame.image.load(SOUND_FALSE)
 
     sound_image = pygame.transform.scale(sound_image, (CELL_SIZE - 15, CELL_SIZE - 15))
     screen.blit(sound_image, (CELL_SIZE * 13 + 10, CELL_SIZE // 2 - 13))
