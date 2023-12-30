@@ -1,5 +1,6 @@
 <div align="center">
   <h1>Snake</h1>
+  <img src="snake_game.gif" alt="Snake" width="450" height="450">
 </div>
 
 ## Summary
