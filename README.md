@@ -17,3 +17,6 @@ Start Screen
 - Scoring: Your score increases with each apple eaten. Try to beat your high score and compete with yourself!
 
 - Game Over Screen: When the snake collides with the walls or itself, the game ends. A Game Over screen will display your final score and the number of apples you managed to collect during the game.
+
+## How to Play
+Download and run the Snake Game by executing the main.exe file in the dist directory. Use arrow keys to guide the snake, eat apples to score, and avoid collisions. The game ends when the snake collides. Enjoy the classic Snake Game experience!
